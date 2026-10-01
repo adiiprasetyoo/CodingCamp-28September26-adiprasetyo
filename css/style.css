@@ -27,6 +27,30 @@
   --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
+/* ===========================
+   Dark Theme
+=========================== */
+[data-theme="dark"] {
+  --color-bg: #0f172a;
+  --color-surface: #1e293b;
+  --color-text: #f1f5f9;
+  --color-muted: #94a3b8;
+  --color-border: #334155;
+  --color-primary: #818cf8;
+  --color-primary-hover: #6366f1;
+  --color-error: #f87171;
+}
+
+[data-theme="dark"] .form-group input,
+[data-theme="dark"] .form-group select {
+  background: #0f172a;
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .transaction-item {
+  background: #0f172a;
+}
+
 html {
   font-size: 16px;
 }
@@ -52,6 +76,7 @@ body {
    Header / Balance
 =========================== */
 .header {
+  position: relative;
   padding: 28px 0 20px;
   text-align: center;
 }
@@ -87,6 +112,31 @@ body {
   font-size: 2rem;
   font-weight: 800;
   letter-spacing: -1px;
+}
+
+/* ===========================
+   Theme Toggle Button
+=========================== */
+.btn-theme {
+  position: absolute;
+  top: 28px;
+  right: 0;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow);
+  transition: background 0.2s;
+}
+
+.btn-theme:hover {
+  background: var(--color-bg);
 }
 
 /* ===========================
@@ -213,6 +263,87 @@ body {
 
 .chart-empty.visible {
   display: block;
+}
+
+/* ===========================
+   Monthly Summary
+=========================== */
+.summary-empty {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+  text-align: center;
+  padding: 16px 0;
+}
+
+.summary-month {
+  margin-bottom: 12px;
+}
+
+.summary-month-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.summary-table td {
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.summary-table td:last-child {
+  text-align: right;
+  font-weight: 600;
+}
+
+.summary-income { color: #22c55e; }
+.summary-expense { color: var(--color-error); }
+.summary-net-positive { color: #22c55e; font-weight: 700; }
+.summary-net-negative { color: var(--color-error); font-weight: 700; }
+
+/* ===========================
+   Sort Controls
+=========================== */
+.sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.sort-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+
+.sort-controls select {
+  flex: 1;
+  padding: 7px 10px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-family: var(--font);
+  color: var(--color-text);
+  background: var(--color-surface);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+}
+
+.sort-controls select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
 }
 
 /* ===========================

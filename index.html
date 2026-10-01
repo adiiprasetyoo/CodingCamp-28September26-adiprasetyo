@@ -13,6 +13,7 @@
 
       <!-- Header / Balance -->
       <header class="header">
+        <button class="btn-theme" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
         <h1 class="app-title">💰 Budget Tracker</h1>
         <div class="balance-card">
           <span class="balance-label">Total Spent</span>
@@ -70,9 +71,24 @@
         </div>
       </section>
 
+      <!-- Monthly Summary -->
+      <section class="card summary-section">
+        <h2 class="section-title">Monthly Summary</h2>
+        <div id="monthlySummary"></div>
+      </section>
+
       <!-- Transaction List -->
       <section class="card list-section">
         <h2 class="section-title">Transaction History</h2>
+        <div class="sort-controls">
+          <label for="sortSelect" class="sort-label">Sort by:</label>
+          <select id="sortSelect">
+            <option value="default">Most Recent</option>
+            <option value="amount-desc">Amount: Highest First</option>
+            <option value="amount-asc">Amount: Lowest First</option>
+            <option value="category-az">Category: A → Z</option>
+          </select>
+        </div>
         <ul class="transaction-list" id="transactionList">
           <li class="list-empty" id="listEmpty">No transactions yet.</li>
         </ul>

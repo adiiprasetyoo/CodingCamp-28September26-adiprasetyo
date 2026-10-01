@@ -2,7 +2,7 @@
 
 ## Overview
 
-This plan covers the full build of the Expense & Budget Visualizer — a single-page HTML/CSS/JS app that lets users track transactions by category, visualise spending with a Chart.js pie chart, and manage a to-do list. All data persists to `localStorage`. The work is broken into five phases: scaffold, HTML structure, styling, JavaScript logic, and integration verification.
+This plan covers the full build of the Expense & Budget Visualizer — a single-page HTML/CSS/JS app that lets users track transactions by category, visualise spending with a Chart.js pie chart, and manage a to-do list. All data persists to `localStorage`. The work is broken into six phases: scaffold, HTML structure, styling, JavaScript logic, integration verification, and new features (dark/light mode, monthly summary, sort).
 
 ## Tasks
 
@@ -25,7 +25,7 @@ This plan covers the full build of the Expense & Budget Visualizer — a single-
 - [x] **TASK-04** Add "Add Transaction" form with fields: `#itemName`, `#amount`, `#category` (select), submit button, and inline error `<span>` elements.
 - [x] **TASK-05** Add chart section with `<canvas id="spendingChart">` and `#chartEmpty` empty-state paragraph.
 - [x] **TASK-06** Add transaction history section with `<ul id="transactionList">` and `#listEmpty` placeholder.
-- [x] **TASK-07** Add To-Do List section with:
+- [ ] **TASK-07** Add To-Do List section with:
   - `<form id="todoForm">` containing `#todoInput` and add `+` button
   - Filter tab buttons (All / Active / Done)
   - `<ul id="todoList">` and `#todoEmpty` placeholder
@@ -71,8 +71,8 @@ This plan covers the full build of the Expense & Budget Visualizer — a single-
   - Show `#todoEmpty` when filtered list is empty.
   - Update `#todoCount` ("X task(s) left" = active count).
   - Show/hide `#todoFooter` based on whether any todos exist.
-- [x] **TASK-30** Implement `render()` calling all four sub-renders.
-- [x] **TASK-31** Implement `addTransaction()` and `deleteTransaction(id)`.
+- [x] **TASK-30** Implement `render()` calling all sub-renders (balance, list, chart, monthly summary).
+- [x] **TASK-31** Implement `addTransaction()` and `deleteTransaction(id)`. `addTransaction()` stores `date: new Date().toISOString()`.
 - [ ] **TASK-32** Implement `addTodo()`, `toggleTodo(id)`, `deleteTodo(id)`, `clearDoneTodos()`.
 - [x] **TASK-33** Wire transaction form `submit` event (validate → add → reset).
 - [ ] **TASK-34** Wire todo form `submit` event (validate → add → reset).
@@ -80,7 +80,7 @@ This plan covers the full build of the Expense & Budget Visualizer — a single-
 - [ ] **TASK-36** Wire `#btnClearDone` click to `clearDoneTodos()`.
 - [x] **TASK-37** Wire live-clear error events for transaction fields.
 - [ ] **TASK-38** Wire live-clear error event for `#todoInput`.
-- [x] **TASK-39** Call `render()` on startup to restore saved state.
+- [x] **TASK-39** Call `initTheme()` → `initSort()` → `render()` on startup to restore saved state.
 
 ---
 
@@ -99,37 +99,79 @@ This plan covers the full build of the Expense & Budget Visualizer — a single-
 
 ---
 
+### Phase 6 — New Features
+
+#### Dark / Light Mode Toggle
+
+- [x] **TASK-50** Add `<button class="btn-theme" id="themeToggle">` inside `.header` in `index.html`.
+- [x] **TASK-51** Add `.btn-theme` CSS styles (absolute-positioned, circular, top-right of header).
+- [x] **TASK-52** Add `[data-theme="dark"]` CSS overrides for all `--color-*` custom properties, form inputs, and transaction items.
+- [x] **TASK-53** Define `THEME_KEY = 'budget_tracker_theme'` constant in `js/app.js`.
+- [x] **TASK-54** Implement `applyTheme(theme)` — sets `data-theme` on `<html>`, updates button icon (🌙 / ☀️) and `aria-label`.
+- [x] **TASK-55** Implement `initTheme()` — reads `THEME_KEY` from localStorage (defaults to `'light'`), calls `applyTheme()`.
+- [x] **TASK-56** Wire `#themeToggle` click event — toggles theme, persists to localStorage, calls `applyTheme()`.
+
+#### Monthly Summary View
+
+- [x] **TASK-57** Add `<section class="card summary-section">` with `<div id="monthlySummary">` between the chart and list sections in `index.html`.
+- [x] **TASK-58** Add `.summary-*` CSS styles: `.summary-empty`, `.summary-month`, `.summary-month-title`, `.summary-table`, `.summary-income`, `.summary-expense`, `.summary-net-positive`, `.summary-net-negative`.
+- [x] **TASK-59** Add `monthlySummaryEl` DOM reference in `js/app.js`.
+- [x] **TASK-60** Implement `renderMonthlySummary()` — groups transactions by month label, sorts descending (newest first), renders income / expenses / net per month as a table; handles legacy transactions without `date` as "(Date Unknown)"; shows empty-state message when no transactions exist.
+- [x] **TASK-61** Call `renderMonthlySummary()` from `render()`.
+
+#### Sort Transactions
+
+- [x] **TASK-62** Add `.sort-controls` div with `<select id="sortSelect">` above `<ul id="transactionList">` in `index.html`. Options: Most Recent / Amount: Highest First / Amount: Lowest First / Category: A → Z.
+- [x] **TASK-63** Add `.sort-controls` and `.sort-label` CSS styles.
+- [x] **TASK-64** Define `SORT_KEY = 'budget_tracker_sort'` constant in `js/app.js`.
+- [x] **TASK-65** Add `sortSelect` DOM reference in `js/app.js`.
+- [x] **TASK-66** Implement `initSort()` — reads `SORT_KEY` from localStorage, sets `sortSelect.value`.
+- [x] **TASK-67** Implement `getSortedTransactions()` — returns a sorted copy of `transactions` based on `sortSelect.value` without mutating the original array.
+- [x] **TASK-68** Update `renderList()` to use `getSortedTransactions()` instead of reversing the raw array.
+- [x] **TASK-69** Wire `#sortSelect` change event — persists chosen sort to localStorage, calls `render()`.
+
+---
+
 ## Task Dependency Graph
 
 ```
 TASK-01
   └── TASK-02
-        ├── TASK-03
-        │     └── TASK-10
-        ├── TASK-04
-        │     └── TASK-12
-        │           └── TASK-22 → TASK-33 → TASK-37
-        ├── TASK-05
-        │     └── TASK-13 → TASK-25 → TASK-28
-        ├── TASK-06
-        │     └── TASK-14 → TASK-15 → TASK-27 → TASK-31
-        └── TASK-07
-              └── TASK-16
-                    └── TASK-19 → TASK-24 → TASK-29
-                          └── TASK-32 → TASK-34 → TASK-35 → TASK-36 → TASK-38
+        ├── TASK-03 → TASK-10
+        │     └── TASK-50 → TASK-51 → TASK-52 → TASK-53 → TASK-54 → TASK-55 → TASK-56
+        ├── TASK-04 → TASK-12
+        │     └── TASK-22 → TASK-33 → TASK-37
+        ├── TASK-05 → TASK-13 → TASK-25 → TASK-28
+        ├── TASK-06 → TASK-14 → TASK-15 → TASK-27 → TASK-31
+        │     └── TASK-62 → TASK-63 → TASK-64 → TASK-65 → TASK-66 → TASK-67 → TASK-68 → TASK-69
+        ├── TASK-07 → TASK-16
+        │     └── TASK-19 → TASK-24 → TASK-29
+        │           └── TASK-32 → TASK-34 → TASK-35 → TASK-36 → TASK-38
+        └── TASK-57 → TASK-58 → TASK-59 → TASK-60 → TASK-61
 
 Shared utilities (no dependencies):
-  TASK-08 → TASK-09 → TASK-11 → TASK-17  (CSS foundations)
-  TASK-18 → TASK-20 → TASK-21             (JS constants & helpers)
-  TASK-23 → TASK-26 → TASK-30 → TASK-39  (state init & render pipeline)
+  TASK-08 → TASK-09 → TASK-11 → TASK-17   (CSS foundations)
+  TASK-18 → TASK-20 → TASK-21              (JS constants & helpers)
+  TASK-23 → TASK-26 → TASK-30 → TASK-39   (state init & render pipeline)
 
-Phase 5 (TASK-40 – TASK-49): all depend on Phase 1–4 being complete.
+Phase 5 (TASK-40 – TASK-49): all depend on Phase 1–6 being complete.
 ```
+
+---
 
 ## Notes
 
-- All tasks in Phase 5 are manual verification steps; they have no automated test equivalent and must be performed in a browser.
-- TASK-16 (To-Do styles) and TASK-19/24/29/32/34–36/38 (To-Do JS) are the remaining open items before the app is feature-complete.
-- `localStorage` keys: `STORAGE_KEY` for transactions, `TODO_KEY` (`'budget_tracker_todos'`) for todos — keep them distinct to avoid collisions.
-- Chart.js is loaded from CDN; no npm install is needed. Ensure the `<script>` tag in `index.html` appears before `js/app.js`.
-- The responsive breakpoint targets 360 px (TASK-17); manual mobile testing uses a 375 px viewport (TASK-48) — both must pass.
+- **Remaining open items before app is fully feature-complete:**
+  - To-Do section: TASK-07 (HTML), TASK-16 (CSS), TASK-19/24/29/32/34/35/36/38 (JS)
+  - Phase 5 manual verification steps (TASK-40 – TASK-49)
+- **localStorage keys in use:**
+  - `budget_tracker_transactions` — transaction array
+  - `budget_tracker_theme` — `'light'` or `'dark'`
+  - `budget_tracker_sort` — sort mode (`'default'`, `'amount-desc'`, `'amount-asc'`, `'category-az'`)
+  - `budget_tracker_todos` — todos array (to be added when To-Do feature is implemented)
+- Chart.js is loaded from CDN before `js/app.js`; no npm install needed.
+- `addTransaction()` stores `date: new Date().toISOString()` on every new transaction. Legacy transactions without a `date` field are rendered as "(Date Unknown)" in the monthly summary.
+- Sort only affects render order; the `transactions` array in memory and localStorage is never mutated by sorting.
+- Dark mode uses `[data-theme="dark"]` on `<html>` and CSS custom property overrides — no inline styles needed.
+- All Phase 5 tasks are manual browser verification steps; there is no automated test equivalent.
+- The responsive breakpoint targets 360 px (TASK-17); mobile testing uses 375 px (TASK-48).
